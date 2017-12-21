@@ -6,6 +6,7 @@ package com.example.luis.agendaconfab;
 
 public class Contacto {
     private String nombre, telefono;
+    private int id;
 
     public String getNombre() {
         return nombre;
@@ -15,8 +16,13 @@ public class Contacto {
         return telefono;
     }
 
-    public Contacto(String nombre, String telefono) {
+    public int getId() {
+        return id;
+    }
+
+    public Contacto(String nombre, String telefono, int id) {
         this.nombre = nombre;
         this.telefono = telefono;
+        this.id = id;
     }
 }

@@ -1,7 +1,10 @@
 package com.example.luis.agendaconfab;
 
+import android.app.DialogFragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.database.DataSetObserver;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,10 +22,12 @@ import java.util.List;
 public class AdaptadorListView implements ListAdapter {
 private List<Contacto> lista_contactos;
 private Context contexto;
+private FragmentManager fm;
 
-    public AdaptadorListView(List<Contacto> lista_contactos, Context contexto) {
+    public AdaptadorListView(List<Contacto> lista_contactos, Context contexto, FragmentManager fm) {
         this.lista_contactos = lista_contactos;
         this.contexto = contexto;
+        this.fm=fm;
     }
 
     @Override
@@ -66,19 +71,27 @@ private Context contexto;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, final ViewGroup parent) {
         LayoutInflater inflater= LayoutInflater.from(contexto);
         View vista=inflater.inflate(R.layout.layout_contacto, parent, false);
         TextView tv_nombre=vista.findViewById(R.id.tv_nombre);
         TextView tv_telefono=vista.findViewById(R.id.tv_telefono);
-        final String telefono=lista_contactos.get(position).getTelefono();
+        final String nombre=lista_contactos.get(position).getNombre();
+        final Contacto c=lista_contactos.get(position);
         ImageButton btn_borrar=vista.findViewById(R.id.btn_borrar);
         tv_nombre.setText(lista_contactos.get(position).getNombre());
         tv_telefono.setText(lista_contactos.get(position).getTelefono());
         btn_borrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.v("Borrar", telefono);
+                DialogConfirmarBorrado df=new DialogConfirmarBorrado();
+
+                Bundle argumentos=new Bundle();
+                argumentos.putString("nombre", c.getNombre());
+                argumentos.putInt("id", c.getId());
+                df.setArguments(argumentos);//Argumentos que se mandan al DialogFragment
+                df.show(fm, "Confirmación de borrado de "+c.getNombre());
+
             }
         });
         return vista;
